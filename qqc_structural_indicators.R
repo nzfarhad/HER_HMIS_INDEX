@@ -449,9 +449,52 @@ data_processed <- data %>%
     ),
     # 9.15 - Existence of a system to recover drop-outs - Missing
     
+    # 10. ANC
+    q10_1_anc = case_when(
+      q10_1_1 == 1 & q10_1_2 == 1 ~ 0.5,
+      TRUE ~ 0
+    ),
+    
+    q10_2_anc = case_when(
+      q10_2_1 == 1 & q10_2_2 == 1 & q10_2_3 == 1 & q10_2_4 == 1 & q10_2_5 == 1 & q10_2_6 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q10_3_anc = case_when(
+      q10_3_1 == 1 & q10_3_2 == 1 & q10_3_3 == 1 & q10_3_4 == 1 & q10_3_5 == 1 ~ 3,
+      TRUE ~ 0
+    ),
+    
+    q10_4_anc = case_when(
+      q10_4_1 == 1 & q10_4_2 == 1 & q10_4_3 == 1 & q10_4_4 == 1 & q10_4_5 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q10_5_anc = case_when(
+      q10_5 %in% "Yes" ~ 0.5,
+      TRUE ~ 0
+    ),
+    
+    q10_6_anc = case_when(
+      q10_6 %in% "YES, both criteria have been met" ~ 3,
+      TRUE ~ 0
+    ),
+    
+    q10_7_anc = case_when(
+      q10_7 %in% "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q10_8_anc = case_when(
+      q10_8 %in% "YES, both criteria have been met" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    
+    
   )
 
 
-table(data_processed$q9_14_epi)
+table(data_processed$q10_8_anc)
 table(is.na(data_processed$q9_2))
 
