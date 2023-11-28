@@ -4,10 +4,11 @@ library(readxl)
 
 # Read data ------------------------------------------------------------------------------
 data_path <- "./input/HER_Re_QQC_cleaned_approved.xlsx"
-
+data <- read_excel(data_path, sheet = "data", guess_max = 5000000) %>% 
+  filter(HF_Type_based_on_sample != "SHC") %>% 
+  filter(Interviewee_Respondent_Type %in% "Observation Section")
 
 # Pre-Process -------------------------------------------------------------
-data <- read_excel(data_path, sheet = "data", guess_max = 5000000)
 
 data_processed <- data %>% 
   mutate(
@@ -298,17 +299,17 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
-    q4_3_opd  = case_when(
+    q4_3_fp  = case_when(
       q4_3_1 == 1 & q4_3_2 == 1 & q4_3_3 == 1   ~ 7,
       TRUE ~ 0
     ),
     
-    q4_4_opd  = case_when(
+    q4_4_fp  = case_when(
       q4_4_1 == 1 & q4_4_2 == 1    ~ 3,
       TRUE ~ 0
     ),
     
-    q4_5_opd  = case_when(
+    q4_5_fp  = case_when(
       q4_5_1 == 1 & q4_5_2 == 1    ~ 3,
       TRUE ~ 0
     ),
@@ -635,7 +636,7 @@ data_processed <- data %>%
     ),
     
     q7_40_tracerrx = case_when(
-      q7_40 == "Yes, available with the amount of two months’ worth of AMC" ~ 0, # FIXME: the score is 0 in both cases
+      q7_40 == "Yes, available with the amount of two months’ worth of AMC" ~ 0,
       TRUE ~ 0
     ),
     
@@ -741,7 +742,7 @@ data_processed <- data %>%
     ),
     
     q8_7_3_maternity = case_when(
-      q8_7_3 == "Yes, available and functional" ~ 1, # FIXME: the indicator label in the tool and calculation guideline doesn't match.
+      q8_7_3 == "Yes, available and functional" ~ 1,
       TRUE ~ 0
     ),
     
@@ -776,7 +777,6 @@ data_processed <- data %>%
     ),
     
     q8_10_maternity = case_when(
-      # the option "Functioning scale for weighing newborn (check functionality)" mentioned in guideline documentation is missing in the choices sheet of the questionnaire
       q8_10_1 == 1 & q8_10_2 == 1 & q8_10_3 == 1 & q8_10_4 == 1 & q8_10_5 == 1 & q8_10_6 == 1 & q8_10_7 == 1 & q8_10_8 == 1 & q8_10_9 == 1 ~ 2, 
       TRUE ~ 0
     ),
@@ -906,6 +906,37 @@ data_processed <- data %>%
 
 
 
+# Aggregate the points ----------------------------------------------------
+
+data_processed_indicators <- data_processed %>% 
+  rowwise() %>% 
+  mutate(
+    General_Management = sum(c_across(ends_with("_gen_mgmnt")), na.rm = T),
+    Hygiene = sum(c_across(ends_with("_hygiene")), na.rm = T),
+    OPD = sum(c_across(ends_with("_opd")), na.rm = T),
+    Family_Planning = sum(c_across(ends_with("_fp")), na.rm = T),
+    Laboratory = sum(c_across(ends_with("_lab")), na.rm = T),
+    Essential_Drugs_Management = sum(c_across(ends_with("_edm")), na.rm = T),
+    Tracer_Drugs = sum(c_across(ends_with("_tracerrx")), na.rm = T),
+    Maternity = sum(c_across(ends_with("_maternity")), na.rm = T),
+    EPI = sum(c_across(ends_with("_epi")), na.rm = T),
+    ANC = sum(c_across(ends_with("_anc")), na.rm = T),
+  ) %>% ungroup() %>% 
+  mutate(
+    General_Management_score = General_Management / 14,
+    Hygiene_score = Hygiene / 34,
+    OPD_score = OPD / 44,
+    Family_Planning_score = Family_Planning / 23,
+    Laboratory_score = Laboratory / 15,
+    Essential_Drugs_Management_score = Essential_Drugs_Management / 48, # Since 6.3.2 is missing max score has been reduced to 48 from 52 (6.3.1 gets 4 points)
+    Tracer_Drugs_score = Tracer_Drugs / 90,
+    Maternity_score = Maternity / 29,
+    EPI_score = EPI / 25, # 9.15 "Existence of a system to recover drop-outs" is missing, The max score is adjusted, reduced to 25 from 27 (9.15 gets 2 points)
+    ANC_score = ANC / 13,
+  )
+
+
+# Analysis ----------------------------------------------------------------
 
 
 
@@ -916,6 +947,37 @@ data_processed <- data %>%
 
 
 
-table(data_processed$q10_8_anc)
-table(is.na(data_processed$q9_2))
+
+
+
+
+
+
+
+
+
+# data subset
+sub_set <- data_processed_indicators %>% 
+  select(
+    Province:HF_Type_based_on_sample, SP_Name_based_on_sample, Interview_Type_SV,
+    General_Management:ANC_score,
+    ends_with(c("_gen_mgmnt", "_hygiene", "_opd", "_fp", "_lab", "_edm", "_tracerrx", "_maternity", "_epi", "_anc")),
+    
+  )
+
+openxlsx::write.xlsx(sub_set, "output/QQC_indicators_calculations.xlsx")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
