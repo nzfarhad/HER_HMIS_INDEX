@@ -286,10 +286,48 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
+    # 4. FP
+    
+    q4_1_fp  = case_when(
+      q4_1 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q4_2_fp  = case_when(
+      q4_2 %in% "Yes" ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q4_3_opd  = case_when(
+      q4_3_1 == 1 & q4_3_2 == 1 & q4_3_3 == 1   ~ 7,
+      TRUE ~ 0
+    ),
+    
+    q4_4_opd  = case_when(
+      q4_4_1 == 1 & q4_4_2 == 1    ~ 3,
+      TRUE ~ 0
+    ),
+    
+    q4_5_opd  = case_when(
+      q4_5_1 == 1 & q4_5_2 == 1    ~ 3,
+      TRUE ~ 0
+    ),
+    
+    q4_6_fp  = case_when(
+      q4_6 %in% "Yes" ~ 3,
+      TRUE ~ 0
+    ),
+    
+    q4_7_fp  = case_when(
+      q4_7 %in% "YES, all five cards have all five elements" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    
     
   )
 
 
-table(data_processed$q3_24_3_opd)
+table(data_processed$q4_7_fp)
 table(is.na(data_processed$q1_5))
 
