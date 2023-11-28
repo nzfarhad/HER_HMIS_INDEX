@@ -938,7 +938,31 @@ data_processed_indicators <- data_processed %>%
 
 # Analysis ----------------------------------------------------------------
 
+data_for_analysis <- data_processed_indicators %>% 
+  mutate(
+    General_Management_score = case_when(
+      Interview_Type_SV %in% "General Management" ~ General_Management_score,
+      TRUE ~ NA_real_
+    )
+  )
 
+
+
+table(data_processed_indicators$Interview_Type_SV)
+
+
+overall <- data_processed_indicators %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score),
+    Hygiene_score = mean(Hygiene_score),
+    OPD_score = mean(OPD_score),
+    Family_Planning_score = mean(Family_Planning_score),
+    Laboratory_score = mean(Laboratory_score),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score),
+    Maternity_score = mean(Maternity_score),
+    EPI_score = mean(EPI_score),
+  )
+  
 
 
 
