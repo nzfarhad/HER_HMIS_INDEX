@@ -905,7 +905,6 @@ data_processed <- data %>%
   )
 
 
-
 # Aggregate the points ----------------------------------------------------
 
 data_processed_indicators <- data_processed %>% 
@@ -938,45 +937,141 @@ data_processed_indicators <- data_processed %>%
 
 # Analysis ----------------------------------------------------------------
 
+# Changing 0 to NA in cells that were supposed to be empty for correct calculation of mean
 data_for_analysis <- data_processed_indicators %>% 
   mutate(
     General_Management_score = case_when(
       Interview_Type_SV %in% "General Management" ~ General_Management_score,
       TRUE ~ NA_real_
-    )
+    ),
+    Hygiene_score = case_when(
+      Interview_Type_SV %in% "Hygiene" ~ Hygiene_score,
+      TRUE ~ NA_real_
+    ),
+    OPD_score = case_when(
+      Interview_Type_SV %in% "OPD" ~ OPD_score,
+      TRUE ~ NA_real_
+    ),
+    Family_Planning_score = case_when(
+      Interview_Type_SV %in% "Family Planning" ~ Family_Planning_score,
+      TRUE ~ NA_real_
+    ),
+    Laboratory_score = case_when(
+      Interview_Type_SV %in% "Laboratory" ~ Laboratory_score,
+      TRUE ~ NA_real_
+    ),
+    Essential_Drugs_Management_score = case_when(
+      Interview_Type_SV %in% "Essential Drugs Management" ~ Essential_Drugs_Management_score,
+      TRUE ~ NA_real_
+    ),
+    Tracer_Drugs_score = case_when(
+      Interview_Type_SV %in% "Tracer Drugs" ~ Tracer_Drugs_score,
+      TRUE ~ NA_real_
+    ),
+    Maternity_score = case_when(
+      Interview_Type_SV %in% "Maternity" ~ Maternity_score,
+      TRUE ~ NA_real_
+    ),
+    EPI_score = case_when(
+      Interview_Type_SV %in% "EPI" ~ EPI_score,
+      TRUE ~ NA_real_
+    ),
+    ANC_score = case_when(
+      Interview_Type_SV %in% "ANC" ~ ANC_score,
+      TRUE ~ NA_real_
+    ),
   )
 
 
+# Aggregation
 
-table(data_processed_indicators$Interview_Type_SV)
-
-
-overall <- data_processed_indicators %>% 
+overall <- data_for_analysis %>% 
   summarise(
-    General_Management_score = mean(General_Management_score),
-    Hygiene_score = mean(Hygiene_score),
-    OPD_score = mean(OPD_score),
-    Family_Planning_score = mean(Family_Planning_score),
-    Laboratory_score = mean(Laboratory_score),
-    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score),
-    Maternity_score = mean(Maternity_score),
-    EPI_score = mean(EPI_score),
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
   )
   
 
+by_region <- data_for_analysis %>% 
+  group_by(Region) %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
+  )
+
+
+by_hf_type <- data_for_analysis %>% 
+  group_by(HF_Type_based_on_sample) %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
+  )
+
+by_province <- data_for_analysis %>% 
+  group_by(Province) %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
+  )
+
+by_sp <- data_for_analysis %>% 
+  group_by(SP_Name_based_on_sample) %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
+  )
 
 
 
+output_list <- list(
+  overall = overall,
+  by_region = by_region,
+  by_hf_type = by_hf_type,
+  by_province = by_province,
+  by_sp = by_sp
+)
 
-
-
-
-
-
-
-
-
-
+openxlsx::write.xlsx(output_list, "output/QQC_Indicators_analysis_28112023.xlsx")
 
 
 
@@ -990,18 +1085,4 @@ sub_set <- data_processed_indicators %>%
   )
 
 openxlsx::write.xlsx(sub_set, "output/QQC_indicators_calculations.xlsx")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
