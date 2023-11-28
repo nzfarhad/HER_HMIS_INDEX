@@ -85,11 +85,31 @@ accuracy_score_MA_overall <- data_located %>%
          `Under 5 Morbidities`, `C-section` , `Major surgery`, Overall
   )
 
+# Accuracy score region
+accuracy_score_MA_region <- data_located %>% 
+  group_by(Region, Service_Type_Sample) %>% 
+  summarise(
+    score = sum(service_verified == "Yes") / n()
+  ) %>% ungroup() %>% 
+  pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
+  rowwise() %>% 
+  mutate(
+    Overall = mean(c_across(is.numeric), na.rm = T)
+  ) %>% ungroup() %>% 
+  select(Region, 
+         `Ante-natal care (ANC)`, `Post-natal care (PNC)`,
+         `Institutional Delivery`, `Couple-year protection (CYP)/Family Planning`,
+         `Pentavalent vaccine`, `Toxoid Tetanus (TT+) vaccine`,
+         `Tuberculosis exams (TB smear+ or GeneXpert)`, `Growth monitoring of children below 2 years old`,
+         `Under 5 Morbidities`, `C-section` , `Major surgery`, Overall
+  )
+
 # list of outputs
 accuracy_score_list <- list(
   accuracy_score_MA_bphs = accuracy_score_MA_bphs,
   accuracy_score_MA_ephs = accuracy_score_MA_ephs,
-  accuracy_score_MA_overall = accuracy_score_MA_overall
+  accuracy_score_MA_overall = accuracy_score_MA_overall,
+  accuracy_score_MA_region = accuracy_score_MA_region
 )
 
 openxlsx::write.xlsx(accuracy_score_list, "output/accuracy_score.xlsx")
@@ -158,12 +178,27 @@ households_located_MA_overall <- data %>%
          `Under 5 Morbidities`, `C-section` , `Major surgery`
   )
 
+households_located_MA_region <- data %>% 
+  group_by(Region, Service_Type_Sample) %>% 
+  summarise(
+    score = sum(did_not_lacate_household == "Yes") / n()
+  ) %>% 
+  pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
+  select(Region,
+         `Ante-natal care (ANC)`, `Post-natal care (PNC)`,
+         `Institutional Delivery`, `Couple-year protection (CYP)/Family Planning`,
+         `Pentavalent vaccine`, `Toxoid Tetanus (TT+) vaccine`,
+         `Tuberculosis exams (TB smear+ or GeneXpert)`, `Growth monitoring of children below 2 years old`,
+         `Under 5 Morbidities`, `C-section` , `Major surgery`
+  )
+
 
 # list of outputs
 hh_located_list <- list(
   households_located_MA_bphs = households_located_MA_bphs,
   households_located_MA_ephs = households_located_MA_ephs,
-  households_located_MA_overall = households_located_MA_overall
+  households_located_MA_overall = households_located_MA_overall,
+  households_located_MA_region = households_located_MA_region
 )
 
 
@@ -286,12 +321,42 @@ consistency_score_MA_Overall <- sample_ver_data %>%
   )
 
 
+# Consistency score Region
+consistency_score_MA_region <- sample_ver_data %>% 
+  group_by(Region, Type_of_service_name) %>% 
+  summarise(
+    hf_total = sum(Total_Verified_Visits, na.rm = T),
+    hmis_total = sum(total_Miar_Hmir_visits, na.rm = T),
+    
+    score = if(hf_total > hmis_total) {
+      sum(total_Miar_Hmir_visits, na.rm = T) / sum(Total_Verified_Visits, na.rm = T)
+    }
+    else{
+      sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
+    }
+    
+  ) %>% ungroup() %>% 
+  select(-c(hf_total, hmis_total)) %>% 
+  pivot_wider(names_from = Type_of_service_name, values_from = score) %>% 
+  rowwise() %>% 
+  mutate(
+    Overall = mean(c_across(is.numeric), na.rm = T)
+  ) %>% 
+  select(Region, 
+         `Ante-natal care (ANC)`, `Post-natal care (PNC)`,
+         `Institutional Delivery`, `Couple-year protection (CYP)/Family Planning`,
+         `Pentavalent vaccine`, `Toxoid Tetanus (TT+) vaccine`,
+         `Tuberculosis exams (TB smear+ or GeneXpert)`, `Growth monitoring of children below 2 years old`,
+         `Under 5 Morbidities`, `C-section` , `Major surgery`, Overall
+  )
+
 
 # Output list 
 consistency_score_list <- list(
   consistency_score_MA_bphs = consistency_score_MA_bphs,
   consistency_score_MA_ephs = consistency_score_MA_ephs,
-  consistency_score_MA_Overall = consistency_score_MA_Overall
+  consistency_score_MA_Overall = consistency_score_MA_Overall,
+  consistency_score_MA_region = consistency_score_MA_region
 )
 
 # Export the result
@@ -374,11 +439,32 @@ for (col in names(consistency_score_MA_Overall)) {
 hmis_index_ma_overall <- do.call(cbind, index_overall_list) %>% as.data.frame()
 
 
+
+# HMIS Index region
+index_region_list <- list()
+for (col in names(consistency_score_MA_region)) {
+  
+  if(is.character(consistency_score_MA_region[[col]])){
+    index_region_list[[col]] <- consistency_score_MA_region[[col]]
+  }
+  
+  if (is.numeric(consistency_score_MA_region[[col]])) {
+    index_region_list[[col]] <- consistency_score_MA_region[[col]] * accuracy_score_MA_region[[col]]
+  }
+}
+
+# Convert list to dataframe
+hmis_index_ma_region <- do.call(cbind, index_region_list) %>% as.data.frame()
+
+
+
+
 # list of outputs
 hmis_index_ma_output_list <- list(
   hmis_index_ma_MA_bphs = hmis_index_ma_MA_bphs,
   hmis_index_ma_ephs = hmis_index_ma_ephs,
-  hmis_index_ma_overall = hmis_index_ma_overall
+  hmis_index_ma_overall = hmis_index_ma_overall,
+  hmis_index_ma_region = hmis_index_ma_region
 )
 
 openxlsx::write.xlsx(hmis_index_ma_output_list, "output/hmis_index_ma.xlsx")
