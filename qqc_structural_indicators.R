@@ -226,17 +226,70 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
-    q3_12_opd  = case_when(
-      q3_12 %in% "YES, ALL last five ARI cases have been treated according to the ARI protocol" ~ 1,
+    q3_15_opd  = case_when(
+      q3_15 %in% "Yes" ~ 4,
       TRUE ~ 0
     ),
+    
+    q3_16_opd  = case_when(
+      q3_16 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_17_opd  = case_when(
+      q3_17_1 == 1 & q3_17_2 == 1 & q3_17_3 == 1 & q3_17_4 == 1  ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_18_opd  = case_when(
+      q3_18 %in% "Yes, available and functional" ~ 0.5,
+      TRUE ~ 0
+    ),
+    
+    q3_19_opd  = case_when(
+      q3_19 %in% "Yes, available and functional" ~ 0.5,
+      TRUE ~ 0
+    ),
+    
+    q3_20_opd  = case_when(
+      q3_20 %in% "Yes, available and functional" ~ 0.5,
+      TRUE ~ 0
+    ),
+    
+    q3_21_opd  = case_when(
+      q3_21 %in% "Yes, available and functional" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_22_opd  = case_when(
+      q3_22 %in% "Yes, available and functional" ~ 0.5,
+      TRUE ~ 0
+    ),
+    
+    q3_23_opd  = case_when(
+      q3_23 %in% "YES, both criteria have been met" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_24_1_opd  = case_when(
+      q3_24_1 %in% "YES, all five cases sampled have had their nutritional status recorded" ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q3_24_2_opd  = case_when(
+      q3_24_2 %in% "YES, the mothers of all five cases sampled have had their nutritional status recorded" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_24_3_opd  = case_when(
+      q3_24_3 %in% "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
     
   )
 
 
-
-
-
-table(data_processed$q3_14)
+table(data_processed$q3_24_3_opd)
 table(is.na(data_processed$q1_5))
 
