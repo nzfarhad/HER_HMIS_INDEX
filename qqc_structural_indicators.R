@@ -375,6 +375,418 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
+    # 6. EDM
+    q6_1_edm = case_when(
+      q6_1 == "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q6_1_1_edm = case_when(
+      q6_1_1_1 == 1 & q6_1_1_2 == 1 ~ 6,
+      TRUE ~ 0
+    ),
+    
+    q6_2_edm = case_when(
+      q6_2_1 == 1 & q6_2_2 == 1 ~ 6,
+      TRUE ~ 0
+    ),
+    
+    q6_3_1_edm = case_when(
+      q6_3_1 == "No" ~ 4,
+      TRUE ~ 0
+    ),
+    
+    # 6_3_2 is missing in the tool and data set
+    
+    q6_3_3_edm = case_when(
+      q6_3_3_1 == 1 & q6_3_3_2 == 1 & q6_3_3_3 == 1 & q6_3_3_4 == 1 ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q6_3_4_edm = case_when(
+      q6_3_4 == "YES, correctly mentioned" ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q6_3_5_edm = case_when(
+      q6_3_5_1 == 1 & q6_3_5_2 == 1 & q6_3_5_3 == 1 & q6_3_5_4 == 1 & q6_3_5_5 == 1 ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q6_3_6_edm = case_when(
+      (q6_3_6_1 + q6_3_6_2 + q6_3_6_3 + q6_3_6_4 + q6_3_6_5) >= 4 ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q6_4_edm = case_when(
+      q6_4_1 == 1 & q6_4_2 == 1 ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q6_5_edm = case_when(
+      q6_5_1 == 1 & q6_5_2 == 1 & q6_5_3 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q6_6_1_edm = case_when(
+      q6_6_1 == "Yes" ~ 4,
+      TRUE ~ 0
+    ),
+    
+    q6_6_2_edm = case_when(
+      q6_6_2 == "Yes" ~ 4,
+      TRUE ~ 0
+    ),
+    
+    # 7 TracerRx
+    q7_1_tracerrx = case_when(
+      q7_1 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_2_tracerrx = case_when(
+      q7_2 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_3_tracerrx = case_when(
+      q7_3 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_4_tracerrx = case_when(
+      q7_4 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_5_tracerrx = case_when(
+      q7_5 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_6_tracerrx = case_when(
+      q7_6 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_7_tracerrx = case_when(
+      q7_7 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_8_tracerrx = case_when(
+      q7_8 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_9_tracerrx = case_when(
+      q7_9 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_10_tracerrx = case_when(
+      q7_10 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_11_tracerrx = case_when(
+      q7_11 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_12_tracerrx = case_when(
+      q7_12 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_13_tracerrx = case_when(
+      q7_13 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_14_tracerrx = case_when(
+      q7_14 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_15_tracerrx = case_when(
+      q7_15 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_16_tracerrx = case_when(
+      q7_16 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_17_tracerrx = case_when(
+      q7_17 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_18_tracerrx = case_when(
+      q7_18 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_19_tracerrx = case_when(
+      q7_19 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_20_tracerrx = case_when(
+      q7_20 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_21_tracerrx = case_when(
+      q7_21 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_22_tracerrx = case_when(
+      q7_22 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_23_tracerrx = case_when(
+      q7_23 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_24_tracerrx = case_when(
+      q7_24 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_25_tracerrx = case_when(
+      q7_25 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_26_tracerrx = case_when(
+      q7_26 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_27_tracerrx = case_when(
+      q7_27 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_28_tracerrx = case_when(
+      q7_28 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_29_tracerrx = case_when(
+      q7_29 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_30_tracerrx = case_when(
+      q7_30 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_31_tracerrx = case_when(
+      q7_31 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_32_tracerrx = case_when(
+      q7_32 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_33_tracerrx = case_when(
+      q7_33 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_34_tracerrx = case_when(
+      q7_34 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_35_tracerrx = case_when(
+      q7_35 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_36_tracerrx = case_when(
+      q7_36 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_37_tracerrx = case_when(
+      q7_37 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_38_tracerrx = case_when(
+      q7_38 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_39_tracerrx = case_when(
+      q7_39 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_40_tracerrx = case_when(
+      q7_40 == "Yes, available with the amount of two months’ worth of AMC" ~ 0, # FIXME: the score is 0 in both cases
+      TRUE ~ 0
+    ),
+    
+    q7_41_tracerrx = case_when(
+      q7_41 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_42_tracerrx = case_when(
+      q7_42 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_43_tracerrx = case_when(
+      q7_43 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_44_tracerrx = case_when(
+      q7_44 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_45_tracerrx = case_when(
+      q7_45 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q7_46_tracerrx = case_when(
+      q7_46 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    # 8. Maternity
+    q8_1_maternity = case_when(
+      q8_1_1 == 1 & q8_1_2 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q8_2_maternity = case_when(
+      q8_2_1 == 1 & q8_2_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),  
+    
+    q8_3_maternity = case_when(
+      q8_3_1 == 1 & q8_3_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_4_1_maternity = case_when(
+      q8_4_1 == "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_4_2_maternity = case_when(
+      q8_4_2 == "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_4_3_maternity = case_when(
+      q8_4_3_1 == 1 & q8_4_3_2 == 1 & q8_4_3_3 == 1 & q8_4_3_4 == 1 & q8_4_3_5 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q8_4_4_maternity = case_when(
+      q8_4_4 == "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_4_5_maternity = case_when(
+      q8_4_5 == "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_4_6_maternity = case_when(
+      q8_4_6 == "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_5_maternity = case_when(
+      q8_5 == "YES, both criteria have been met" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q8_6_1_maternity = case_when(
+      q8_6_1 == "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q8_6_2_maternity = case_when(
+      q8_6_2 == "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_7_1_maternity = case_when(
+      q8_7_1 == "Yes, available and functional" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_7_2_maternity = case_when(
+      q8_7_2 == "Yes, available and functional" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_7_3_maternity = case_when(
+      q8_7_3 == "Yes, available and functional" ~ 1, # FIXME: the indicator label in the tool and calculation guideline doesn't match.
+      TRUE ~ 0
+    ),
+    
+    q8_7_4_maternity = case_when(
+      q8_7_4 == "Yes, available and not expired" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_7_5_maternity = case_when(
+      q8_7_5 == "Yes, available and functional" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q8_7_6_maternity = case_when(
+      q8_7_6 == "Yes, available and functional" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_7_7_maternity = case_when(
+      q8_7_7 == "Yes, available and functional" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_8_maternity = case_when(
+      q8_8_1 == 1 & q8_8_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_9_maternity = case_when(
+      q8_9_1 == 1 & q8_9_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q8_10_maternity = case_when(
+      # the option "Functioning scale for weighing newborn (check functionality)" mentioned in guideline documentation is missing in the choices sheet of the questionnaire
+      q8_10_1 == 1 & q8_10_2 == 1 & q8_10_3 == 1 & q8_10_4 == 1 & q8_10_5 == 1 & q8_10_6 == 1 & q8_10_7 == 1 & q8_10_8 == 1 & q8_10_9 == 1 ~ 2, 
+      TRUE ~ 0
+    ),
+    
+    q8_11_maternity = case_when(
+      q8_11_1 == 1 & q8_11_2 == 1 & q8_11_3 == 1 ~ 1, 
+      TRUE ~ 0
+    ),
+    
+    
     # 9. EPI
     
     q9_1_epi  = case_when(
@@ -489,10 +901,19 @@ data_processed <- data %>%
       q10_8 %in% "YES, both criteria have been met" ~ 1,
       TRUE ~ 0
     ),
-    
-    
-    
+
   )
+
+
+
+
+
+
+
+
+
+
+
 
 
 table(data_processed$q10_8_anc)
