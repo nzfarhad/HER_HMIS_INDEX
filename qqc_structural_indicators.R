@@ -150,9 +150,93 @@ data_processed <- data %>%
     ),
     
     
+    # 3. OPD
+    q3_1_opd  = case_when(
+      q3_1_1 == 1 & q3_1_2 == 1 & q3_1_3 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_2_opd  = case_when(
+      q3_2 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_3_opd  = case_when(
+      q3_3 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_4_1_opd  = case_when(
+      q3_4_1_1 == 1 & q3_4_1_2 == 1 & q3_4_1_3 == 1 & q3_4_1_4 == 1 & q3_4_1_5 == 1 ~ 5,
+      TRUE ~ 0
+    ),
+    
+    q3_4_2_opd  = case_when(
+      q3_4_2 %in% "YES, there are two consultation rooms, and the room for men has all five criteria met" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_5_opd  = case_when(
+      q3_5 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_6_opd  = case_when(
+      q3_6 %in% "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_7_1_opd  = case_when(
+      q3_7_1 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_7_2_opd  = case_when(
+      q3_7_2 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_8_opd  = case_when(
+      q3_8 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_9_opd  = case_when(
+      q3_9 %in% "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_10_opd  = case_when(
+      q3_10_1 == 1 & q3_10_2 == 1 & q3_10_3 == 1 & q3_10_4 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_11_opd  = case_when(
+      q3_11_1 == 1 & q3_11_2 == 1 & q3_11_3 == 1 & q3_11_4 == 1 & q3_11_5 == 1 & q3_11_6 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_12_opd  = case_when(
+      q3_12 %in% "YES, ALL last five ARI cases have been treated according to the ARI protocol" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q3_13_1_opd  = case_when(
+      q3_13_1_1 == 1 & q3_13_1_2 == 1 & q3_13_1_3 == 1 & q3_13_1_4 == 1 & q3_13_1_5 == 1 & q3_13_1_6 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_12_opd  = case_when(
+      q3_12 %in% "YES, ALL last five ARI cases have been treated according to the ARI protocol" ~ 1,
+      TRUE ~ 0
+    ),
+    
   )
 
 
-table(data_processed$q2_10_hygiene)
+
+
+
+table(data_processed$q3_14)
 table(is.na(data_processed$q1_5))
 
