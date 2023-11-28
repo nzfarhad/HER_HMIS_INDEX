@@ -323,11 +323,62 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
+    # 5. Laboratory
+    
+    q5_1_lab  = case_when(
+      q5_1 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q5_2_lab  = case_when(
+      q5_2 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q5_3_lab  = case_when(
+      q5_3 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q5_4_lab  = case_when(
+      q5_4 %in% "Yes" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q5_5_lab  = case_when(
+      q5_5 %in% "YES all three criteria met" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q5_6_lab  = case_when(
+      q5_6 %in% "Yes, all six elements are available and functional/not expired" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q5_8_lab  = case_when(
+      q5_8 %in% "YES all three criteria met" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q5_9_opd  = case_when(
+      q5_9_1 == 1 & q5_9_2 == 1 ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q5_10_lab  = case_when(
+      q5_10 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q5_11_opd  = case_when(
+      q5_11_1 == 1 & q5_11_2 == 1 & q5_11_3 == 1 & q5_11_4 == 1 & q5_11_5 == 1 & q5_11_6 == 1 & q5_11_7 == 1 & q5_11_8 == 1 ~ 3,
+      TRUE ~ 0
+    ),
     
     
   )
 
 
-table(data_processed$q4_7_fp)
+table(data_processed$q5_11_opd)
 table(is.na(data_processed$q1_5))
 
