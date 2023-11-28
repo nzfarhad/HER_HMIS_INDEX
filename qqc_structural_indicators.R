@@ -375,10 +375,83 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
+    # 9. EPI
+    
+    q9_1_epi  = case_when(
+      q9_1_1 == 1 & q9_1_2 == 1 & q9_1_3 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_2_epi  = case_when(
+      q9_2_1 == 1 & q9_2_2 == 1 & q9_2_3 == 1 & q9_2_4 == 1 & q9_2_5 == 1 & q9_2_6 == 1 ~ 8,
+      TRUE ~ 0
+    ),
+    
+    # The question numbers are out of order starting from Q9_3
+    q9_3_epi  = case_when(
+      q9_3 %in% "Yes" & q9_4_1 == 1 & q9_4_2 == 1 & q9_4_3 == 1 & q9_4_4 == 1 & q9_4_5 == 1  ~ 5,
+      TRUE ~ 0
+    ),
+
+    q9_4_epi = case_when(
+      q9_5_1 == 1 & q9_5_2 == 1 & q9_5_3 == 1 & q9_5_4 == 1 ~ 1,
+      TRUE  ~ 0
+    ),
+    
+    q9_5_epi  = case_when(
+      q9_6 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+     
+    q9_6_epi = case_when(
+      q9_7_1 == 1 & q9_7_2 == 1 & q9_7_3 == 1 ~ 1,
+      TRUE  ~ 0
+    ),
+       
+    q9_7_epi  = case_when(
+      q9_8 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_8_epi  = case_when(
+      q9_9 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_9_epi  = case_when(
+      q9_10 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_10_epi = case_when(
+      q9_11_1 == 1 & q9_11_2 == 1 & q9_11_3 == 1 & q9_11_4 == 1 ~ 1,
+      TRUE  ~ 0
+    ),
+    
+    q9_11_epi  = case_when(
+      q9_12 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_12_epi  = case_when(
+      q9_13 %in% "Yes" ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_13_epi  = case_when(
+      q9_14_1 == 1 & q9_14_2 == 1  ~ 1,
+      TRUE ~ 0
+    ),
+    
+    q9_14_epi  = case_when(
+      q9_15 %in% "YES, both criteria have been met" ~ 1,
+      TRUE ~ 0
+    ),
+    # 9.15 - Existence of a system to recover drop-outs - Missing
     
   )
 
 
-table(data_processed$q5_11_opd)
-table(is.na(data_processed$q1_5))
+table(data_processed$q9_14_epi)
+table(is.na(data_processed$q9_2))
 
