@@ -42,11 +42,17 @@ data_located <- data %>% filter(excluded == "No")
 ###########################################################################
 # MA Accuracy Score -------------------------------------------------------
 
-# Accuracy score HF category
-accuracy_score_MA_hf_cat <- data_located %>% 
-  group_by(Province, `Service Provider`, Service_Type_Sample, `HF Category`) %>% 
+accuracy_score <- data_located %>% 
+  group_by(Site_Visit_ID, Region, Province, `Service Provider`, `HF Category`, Service_Type_Sample) %>% 
   summarise(
     score = sum(service_verified == "Yes") / n()
+  ) %>% ungroup() 
+
+# Accuracy score HF category
+accuracy_score_MA_hf_cat <- accuracy_score %>% 
+  group_by(Province, `HF Category`, `Service Provider`,Service_Type_Sample) %>% 
+  summarise(
+    score = mean(score, na.rm = T)
   ) %>% ungroup() %>% 
   pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
   rowwise() %>% 
@@ -59,7 +65,7 @@ accuracy_score_MA_hf_cat <- data_located %>%
          `Pentavalent vaccine`, `Toxoid Tetanus (TT+) vaccine`,
          `Tuberculosis exams (TB smear+ or GeneXpert)`, `Growth monitoring of children below 2 years old`,
          `Under 5 Morbidities`, `C-section` , `Major surgery`, Overall
-         )
+  )
 
 
 # Split BPHS and EPHS results
@@ -68,10 +74,10 @@ accuracy_score_MA_ephs <- accuracy_score_MA_hf_cat %>% filter(`HF Category` == "
 
 
 # Accuracy score HF SP
-accuracy_score_MA_hf_sp <- data_located %>% 
+accuracy_score_MA_hf_sp <- accuracy_score %>% 
   group_by(`Service Provider`, Service_Type_Sample, `HF Category`) %>% 
   summarise(
-    score = sum(service_verified == "Yes") / n()
+    score = mean(score, na.rm = T)
   ) %>% ungroup() %>% 
   pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
   rowwise() %>% 
@@ -87,12 +93,11 @@ accuracy_score_MA_hf_sp <- data_located %>%
   )
 
 
-
 # Accuracy score Overall
-accuracy_score_MA_overall <- data_located %>% 
+accuracy_score_MA_overall <- accuracy_score %>% 
   group_by(Province, `Service Provider`, Service_Type_Sample) %>% 
   summarise(
-    score = sum(service_verified == "Yes") / n()
+    score = mean(score, na.rm = T)
   ) %>% ungroup() %>% 
   pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
   rowwise() %>% 
@@ -108,10 +113,10 @@ accuracy_score_MA_overall <- data_located %>%
   )
 
 # Accuracy score region
-accuracy_score_MA_region <- data_located %>% 
+accuracy_score_MA_region <- accuracy_score %>% 
   group_by(Region, Service_Type_Sample) %>% 
   summarise(
-    score = sum(service_verified == "Yes") / n()
+    score = mean(score, na.rm = T)
   ) %>% ungroup() %>% 
   pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
   rowwise() %>% 
@@ -136,30 +141,6 @@ accuracy_score_list <- list(
 )
 
 openxlsx::write.xlsx(accuracy_score_list, "output/accuracy_score.xlsx")
-
-# Question: Should we use the average of verified service and verified data in accuracy calculation - Below is a sample script
-
-#### accuracy score Service and Date mean
-# accuracy_score_MA_hf_cat <- data_located %>%
-#   group_by(Province, `Service Provider`, Service_Type_Sample, `HF Category`) %>%
-#   summarise(
-#     service = sum(service_verified == "Yes") / n(),
-#     date = sum(date_verified == "Yes") / n(),
-#   ) %>% rowwise() %>%
-#   mutate(
-#     score = mean(service, date) * 100
-#     # score = sum(service_verified == "Yes") / n() * 100
-#   ) %>% ungroup() %>%
-#   select(-c(service, date)) %>%
-#   pivot_wider(names_from = Service_Type_Sample, values_from = score) %>% 
-#   ungroup() %>% 
-#   select(Province, `Service Provider`, 
-#          `Ante-natal care (ANC)`, `Post-natal care (PNC)`,
-#          `Institutional Delivery`, `Couple-year protection (CYP)/Family Planning`,
-#          `Pentavalent vaccine`, `Toxoid Tetanus (TT+) vaccine`,
-#          `Tuberculosis exams (TB smear+ or GeneXpert)`, `Growth monitoring of children below 2 years old`,
-#          `Under 5 Morbidities`, `C-section` , `Major surgery`
-#   )
 
 
 ###########################################################################
@@ -294,23 +275,24 @@ sample_ver_data <- sample_ver_data %>%
   filter(Register_Available %in% "Yes")
 
 # Consistency score HF Category
-# formula = If HF register cases are higher: HMIS cases / HF register cases
-#           If HMIS cases are higher: HF register cases / HMIS cases
-consistency_score_MA_hf_cat <- sample_ver_data %>% 
+# formula = register cases / HMIS cases
+
+
+consistency_score <- sample_ver_data %>% 
+  group_by(Site_Visit_ID, Region, Province, `Service Provider`, Type_of_service_name, `HF Category`) %>% 
+  summarise(
+    score = sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
+  ) %>% 
+  mutate(
+    score = ifelse(score > 1, 1, score)
+  )
+
+
+consistency_score_MA_hf_cat <- consistency_score %>% 
   group_by(Province, `Service Provider`, Type_of_service_name, `HF Category`) %>% 
   summarise(
-    hf_total = sum(Total_Verified_Visits, na.rm = T),
-    hmis_total = sum(total_Miar_Hmir_visits, na.rm = T),
-    
-    score = if(hf_total > hmis_total) {
-      sum(total_Miar_Hmir_visits, na.rm = T) / sum(Total_Verified_Visits, na.rm = T)
-    }
-      else{
-       sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
-      }
-    
-  ) %>% ungroup() %>% 
-  select(-c(hf_total, hmis_total)) %>% 
+    score = mean(score, na.rm = T)
+  ) %>% 
   pivot_wider(names_from = Type_of_service_name, values_from = score) %>% 
   rowwise() %>% 
   mutate(
@@ -329,21 +311,11 @@ consistency_score_MA_bphs <- consistency_score_MA_hf_cat %>% filter(`HF Category
 consistency_score_MA_ephs <- consistency_score_MA_hf_cat %>% filter(`HF Category` == "EPHS")
 
 # Service Provider
-consistency_score_MA_sp <- sample_ver_data %>% 
+consistency_score_MA_sp <- consistency_score %>% 
   group_by(`Service Provider`, Type_of_service_name, `HF Category`) %>% 
   summarise(
-    hf_total = sum(Total_Verified_Visits, na.rm = T),
-    hmis_total = sum(total_Miar_Hmir_visits, na.rm = T),
-    
-    score = if(hf_total > hmis_total) {
-      sum(total_Miar_Hmir_visits, na.rm = T) / sum(Total_Verified_Visits, na.rm = T)
-    }
-    else{
-      sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
-    }
-    
-  ) %>% ungroup() %>% 
-  select(-c(hf_total, hmis_total)) %>% 
+    score = mean(score, na.rm = T)
+  ) %>% 
   pivot_wider(names_from = Type_of_service_name, values_from = score) %>% 
   rowwise() %>% 
   mutate(
@@ -358,24 +330,12 @@ consistency_score_MA_sp <- sample_ver_data %>%
   )
 
 
-
-
 # Consistency score Overall
-consistency_score_MA_Overall <- sample_ver_data %>% 
+consistency_score_MA_Overall <- consistency_score %>% 
   group_by(Province, `Service Provider`, Type_of_service_name) %>% 
   summarise(
-    hf_total = sum(Total_Verified_Visits, na.rm = T),
-    hmis_total = sum(total_Miar_Hmir_visits, na.rm = T),
-    
-    score = if(hf_total > hmis_total) {
-      sum(total_Miar_Hmir_visits, na.rm = T) / sum(Total_Verified_Visits, na.rm = T)
-    }
-    else{
-      sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
-    }
-    
-  ) %>% ungroup() %>% 
-  select(-c(hf_total, hmis_total)) %>% 
+    score = mean(score, na.rm = T)
+  ) %>% 
   pivot_wider(names_from = Type_of_service_name, values_from = score) %>% 
   rowwise() %>% 
   mutate(
@@ -391,21 +351,11 @@ consistency_score_MA_Overall <- sample_ver_data %>%
 
 
 # Consistency score Region
-consistency_score_MA_region <- sample_ver_data %>% 
+consistency_score_MA_region <- consistency_score %>% 
   group_by(Region, Type_of_service_name) %>% 
   summarise(
-    hf_total = sum(Total_Verified_Visits, na.rm = T),
-    hmis_total = sum(total_Miar_Hmir_visits, na.rm = T),
-    
-    score = if(hf_total > hmis_total) {
-      sum(total_Miar_Hmir_visits, na.rm = T) / sum(Total_Verified_Visits, na.rm = T)
-    }
-    else{
-      sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
-    }
-    
-  ) %>% ungroup() %>% 
-  select(-c(hf_total, hmis_total)) %>% 
+    score = mean(score, na.rm = T)
+  ) %>% 
   pivot_wider(names_from = Type_of_service_name, values_from = score) %>% 
   rowwise() %>% 
   mutate(
@@ -432,42 +382,9 @@ consistency_score_list <- list(
 # Export the result
 openxlsx::write.xlsx(consistency_score_list, "output/consistency_score.xlsx")
 
-# Consistency score HF Category prev formula
-consistency_score_MA_hf_cat_formula2 <- sample_ver_data %>% 
-  group_by(Province, `Service Provider`, Type_of_service_name, `HF Category`) %>% 
-  summarise(
-    hf_total = sum(Total_Verified_Visits, na.rm = T),
-    hmis_total = sum(total_Miar_Hmir_visits, na.rm = T),
-    
-    score = if(hf_total > hmis_total) {
-      sum(total_Miar_Hmir_visits, na.rm = T) / sum(Total_Verified_Visits, na.rm = T)
-    }
-    else{
-      sum(Total_Verified_Visits, na.rm = T) / sum(total_Miar_Hmir_visits, na.rm = T)
-    }
-    
-  ) %>% ungroup() %>% 
-  select(-c(hf_total, hmis_total)) %>% 
-  pivot_wider(names_from = Type_of_service_name, values_from = score) %>% 
-  rowwise() %>% 
-  mutate(
-    Overall = mean(c_across(is.numeric), na.rm = T)
-  ) %>% 
-  select(Province, `Service Provider`, `HF Category`, 
-         `Ante-natal care (ANC)`, `Post-natal care (PNC)`,
-         `Institutional Delivery`, `Couple-year protection (CYP)/Family Planning`,
-         `Pentavalent vaccine`, `Toxoid Tetanus (TT+) vaccine`,
-         `Tuberculosis exams (TB smear+ or GeneXpert)`, `Growth monitoring of children below 2 years old`,
-         `Under 5 Morbidities`, `C-section` , `Major surgery`, Overall
-  )
 
-# Split BPHS and EPHS results
-consistency_score_MA_bphs_formula2 <- consistency_score_MA_hf_cat_formula2 %>% filter(`HF Category` == "BPHS")
-consistency_score_MA_ephs_formula2 <- consistency_score_MA_hf_cat_formula2 %>% filter(`HF Category` == "EPHS")
-
-
-
-
+###########################################################################
+###########################################################################
 # HMIS INDEX --------------------------------------------------------------
 
 # HMIS Index HF category 
@@ -489,8 +406,6 @@ hmis_index_ma_hf_cat <- do.call(cbind, index_hf_cat_list) %>% as.data.frame()
 # Split BPHS and EPHS results
 hmis_index_ma_MA_bphs <- hmis_index_ma_hf_cat %>% filter(`HF Category` == "BPHS")
 hmis_index_ma_ephs <- hmis_index_ma_hf_cat %>% filter(`HF Category` == "EPHS")
-
-
 
 
 # HMIS Index HF Service Provider 
@@ -543,8 +458,6 @@ for (col in names(consistency_score_MA_region)) {
 
 # Convert list to dataframe
 hmis_index_ma_region <- do.call(cbind, index_region_list) %>% as.data.frame()
-
-
 
 
 # list of outputs
