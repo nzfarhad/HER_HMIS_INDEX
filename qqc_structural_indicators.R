@@ -9,7 +9,6 @@ data <- read_excel(data_path, sheet = "data", guess_max = 5000000) %>%
   filter(Interviewee_Respondent_Type %in% "Observation Section")
 
 # Pre-Process -------------------------------------------------------------
-
 data_processed <- data %>% 
   mutate(
     # 1. Gen_Management
@@ -57,7 +56,7 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     q1_7_gen_mgmnt = case_when(
-      q1_7 %in% "YES (all criteria met)" ~ 1,
+      q1_7 == "Yes" ~ 1,
       TRUE ~ 0
     ),
     q1_8_gen_mgmnt = case_when(
@@ -222,8 +221,13 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
-    q3_13_1_opd  = case_when(
-      q3_13_1_1 == 1 & q3_13_1_2 == 1 & q3_13_1_3 == 1 & q3_13_1_4 == 1 & q3_13_1_5 == 1 & q3_13_1_6 == 1 ~ 2,
+    q3_13_2_opd  = case_when(
+      q3_13_2 == "YES, both criteria have been met" ~ 2,
+      TRUE ~ 0
+    ),
+    
+    q3_14_opd  = case_when(
+      q3_14 == "YES, ALL last five Diarrhea cases have been treated according to the Diarrhea protocol" ~ 1, # Added on 12.12.23
       TRUE ~ 0
     ),
     
@@ -357,11 +361,11 @@ data_processed <- data %>%
     ),
     
     q5_8_lab  = case_when(
-      q5_8 %in% "YES all three criteria met" ~ 1,
+      q5_8 %in% "Yes, available and functional" ~ 1,  # FIXED on 12.12.2023: corrected the choice name
       TRUE ~ 0
     ),
     
-    q5_9_opd  = case_when(
+    q5_9_lab  = case_when( # FIXED on 12.12.2023: added the suffix 'lab'
       q5_9_1 == 1 & q5_9_2 == 1 ~ 2,
       TRUE ~ 0
     ),
@@ -371,7 +375,7 @@ data_processed <- data %>%
       TRUE ~ 0
     ),
     
-    q5_11_opd  = case_when(
+    q5_11_lab  = case_when( # FIXED on 12.12.2023: added the suffix 'lab'
       q5_11_1 == 1 & q5_11_2 == 1 & q5_11_3 == 1 & q5_11_4 == 1 & q5_11_5 == 1 & q5_11_6 == 1 & q5_11_7 == 1 & q5_11_8 == 1 ~ 3,
       TRUE ~ 0
     ),
@@ -461,7 +465,7 @@ data_processed <- data %>%
     ),
     
     q7_5_tracerrx = case_when(
-      q7_5 == "Yes, available with the amount of two months’ worth of AMC" ~ 2,
+      q7_5 == "Yes, available with the amount of two months’ worth of AMC for 50k, 100k, and 200k IU Vit A" ~ 2, # FIXED on 12.12.23: replaced the correct choice
       TRUE ~ 0
     ),
     
@@ -636,7 +640,7 @@ data_processed <- data %>%
     ),
     
     q7_40_tracerrx = case_when(
-      q7_40 == "Yes, available with the amount of two months’ worth of AMC" ~ 0,
+      q7_40 == "Yes, available with the amount of two months’ worth of AMC" ~ 2, # FIXED on 12.12.23 based on long format of scoring methodology
       TRUE ~ 0
     ),
     
@@ -682,7 +686,7 @@ data_processed <- data %>%
     ),  
     
     q8_3_maternity = case_when(
-      q8_3_1 == 1 & q8_3_2 == 1 ~ 1,
+      q8_3_1 == 1 & q8_3_2 == 1 & q8_3_3 == 1 ~ 1,
       TRUE ~ 0
     ),
     
@@ -762,7 +766,7 @@ data_processed <- data %>%
     ),
     
     q8_7_7_maternity = case_when(
-      q8_7_7 == "Yes, available and functional" ~ 1,
+      q8_7_7 == "Yes, available and not expired" ~ 1, # FIXED on 12.12.23: added the correct choice name
       TRUE ~ 0
     ),
     
@@ -900,7 +904,7 @@ data_processed <- data %>%
     q10_8_anc = case_when(
       q10_8 %in% "YES, both criteria have been met" ~ 1,
       TRUE ~ 0
-    ),
+    )
 
   )
 
@@ -924,7 +928,7 @@ data_processed_indicators <- data_processed %>%
   mutate(
     General_Management_score = General_Management / 14,
     Hygiene_score = Hygiene / 34,
-    OPD_score = OPD / 44,
+    OPD_score = OPD / 45, #Fixed on 12.12.23 based on the scoring methodology
     Family_Planning_score = Family_Planning / 23,
     Laboratory_score = Laboratory / 15,
     Essential_Drugs_Management_score = Essential_Drugs_Management / 48, # Since 6.3.2 is missing max score has been reduced to 48 from 52 (6.3.1 gets 4 points)
@@ -1084,5 +1088,5 @@ sub_set <- data_processed_indicators %>%
     
   )
 
-openxlsx::write.xlsx(sub_set, "output/QQC_indicators_calculations.xlsx")
+openxlsx::write.xlsx(sub_set, "output/QQC_indicators_calculations_TEST.xlsx")
 
