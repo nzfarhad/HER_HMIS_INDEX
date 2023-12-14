@@ -1067,6 +1067,40 @@ by_sp <- data_for_analysis %>%
 
 
 
+by_Site_Visit_ID <- data_for_analysis %>% 
+  group_by(Site_Visit_ID) %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
+  )
+
+by_Site_Visit_ID <- data_for_analysis %>% 
+  group_by(Site_Visit_ID) %>% 
+  summarise(
+    General_Management_score = mean(General_Management_score, na.rm = T),
+    Hygiene_score = mean(Hygiene_score, na.rm = T),
+    OPD_score = mean(OPD_score, na.rm = T),
+    Family_Planning_score = mean(Family_Planning_score, na.rm = T),
+    Laboratory_score = mean(Laboratory_score, na.rm = T),
+    Essential_Drugs_Management_score = mean(Essential_Drugs_Management_score, na.rm = T),
+    Tracer_Drugs_score = mean(Tracer_Drugs_score, na.rm = T),
+    Maternity_score = mean(Maternity_score, na.rm = T),
+    EPI_score = mean(EPI_score, na.rm = T),
+    ANC_score = mean(ANC_score, na.rm = T),
+  )
+
+
+openxlsx::write.xlsx(by_Site_Visit_ID, "QQC_TEST_By_Site_Visit_ID.xlsx")
+
+
 output_list <- list(
   overall = overall,
   by_region = by_region,
